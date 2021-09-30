@@ -9,19 +9,25 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+- deployment: Config
+  displayName: config
+  environment:
+    name: home
+    resourceType: VirtualMachine
+  strategy:
+    runOnce:
+      preDeploy:
+        steps:
+        - download: current
+          artifact: drop
+        - script: echo initialize, cleanup, backup, install certs
+      deploy:
+        steps:
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Write your commands here
-      
-      echo 'Hello world'
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              echo 'Hello world'
