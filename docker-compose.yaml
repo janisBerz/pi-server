@@ -1,23 +1,126 @@
-version: "3.9"  # optional since v1.27.0
 services:
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp"
-      - "80:80/tcp"
-      - "443:443/tcp"
+  qbittorrent:
+    image: ghcr.io/linuxserver/qbittorrent
+    container_name: qbittorrent
+    depends_on:
+     - jackett
+     - plex
     environment:
-      TZ: 'Europe/Riga'
-      # WEBPASSWORD: 'set a secure password here or it will be random'
-    # Volumes store your data between container upgrades
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Riga
+      - WEBUI_PORT=8080
     volumes:
-      - './etc-pihole/:/etc/pihole/'
-      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
-    # Recommended but not required (DHCP needs NET_ADMIN)
-    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
-    cap_add:
-      - NET_ADMIN
+      - /media/data/qbittorrent/config:/config
+      - /media/data/downloads/torrents:/downloads
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+      - 8080:8080
     restart: unless-stopped
+  radarr:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr
+    depends_on:
+     - jackett
+     - plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Riga
+    volumes:
+      - /media/data/radarr/config:/config
+      - /media/data/downloads/movies:/movies
+      - /media/data/downloads/torrents:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr
+    container_name: sonarr
+    depends_on:
+     - jackett
+     - plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Riga
+    volumes:
+      - /media/data/sonarr/config:/config
+      - /media/data/sonarr/tvseries:/tv
+      - /media/data/downloads/torrents:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  jackett:
+    image: ghcr.io/linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Riga
+    volumes:
+      - /media/data/jackett/config:/config
+      - /media/data/jackett/downloads:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped 
+  # pihole:
+  #   container_name: pihole
+  #   image: pihole/pihole:latest
+  #   ports:
+  #     - "53:53/tcp"
+  #     - "53:53/udp"
+  #     - "67:67/udp"
+  #     - "80:80/tcp"
+  #     - "443:443/tcp"
+  #   environment:
+  #     TZ: 'Europe/Riga'
+  #     # WEBPASSWORD: 'set a secure password here or it will be random'
+  #   # Volumes store your data between container upgrades
+  #   volumes:
+  #     - './etc-pihole/:/etc/pihole/'
+  #     - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+  #   # Recommended but not required (DHCP needs NET_ADMIN)
+  #   #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+  #   cap_add:
+  #     - NET_ADMIN
+  #   restart: unless-stopped
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Riga
+      - PLEX_CLAIM=claim-mhm3v6THZSsFzA5xVdkh
+    network_mode: host
+    hostname: plex
+    volumes:
+      - /media/data/plex/database:/config
+      - /media/data/transcode/temp:/transcode
+      - /media/data/downloads/movies:/movies
+      - /media/data/sonarr/tvseries:/tvshows
+
+# version: "3.9"  # optional since v1.27.0
+# services:
+#   pihole:
+#     container_name: pihole
+#     image: pihole/pihole:latest
+#     ports:
+#       - "53:53/tcp"
+#       - "53:53/udp"
+#       - "67:67/udp"
+#       - "80:80/tcp"
+#       - "443:443/tcp"
+#     environment:
+#       TZ: 'Europe/Riga'
+#       # WEBPASSWORD: 'set a secure password here or it will be random'
+#     # Volumes store your data between container upgrades
+#     volumes:
+#       - './etc-pihole/:/etc/pihole/'
+#       - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+#     # Recommended but not required (DHCP needs NET_ADMIN)
+#     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+#     cap_add:
+#       - NET_ADMIN
+#     restart: unless-stopped
