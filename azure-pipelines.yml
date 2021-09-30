@@ -17,11 +17,9 @@ jobs:
     resourceType: VirtualMachine
   strategy:
     runOnce:
-      preDeploy:
-        steps:
-        - script: echo initialize, cleanup, backup, install certs
       deploy:
         steps:
+        - checkout: self
 
         - task: Bash@3
           inputs:
