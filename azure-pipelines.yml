@@ -32,5 +32,6 @@ jobs:
             targetType: 'inline'
             script: |
               ls
+              docker pull ghcr.io/linuxserver/sonarr
               docker-compose up -d
               echo 'Hello world'
