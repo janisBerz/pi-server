@@ -23,7 +23,8 @@ jobs:
 
         - task: Bash@3
           inputs:
-            targetType: 'inline'
+            targetType: 'filepath'
             script: |
-              # Write your commands here
+              ls
+              docker-compose up -d
               echo 'Hello world'
