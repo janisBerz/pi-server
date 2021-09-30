@@ -3,8 +3,8 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- master
+# trigger:
+# - master
 
 pool:
   vmImage: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
 
         - task: Bash@3
           inputs:
-            targetType: 'filepath'
+            targetType: 'inline'
             script: |
               ls
               docker-compose up -d
