@@ -100,6 +100,20 @@ services:
       - /media/data/transcode/temp:/transcode
       - /media/data/downloads/movies:/movies
       - /media/data/sonarr/tvseries:/tvshows
+  minidlna:
+    container_name: minidnla
+    image: binhex/arch-minidlna:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Riga
+      - SCAN_ON_BOOT=yes
+    network_mode: host
+    hostname: minidnla
+    volumes:
+      - /media/data/downloads:/media
+      - /etc/localtime:/etc/localtime:ro
 
 # version: "3.9"  # optional since v1.27.0
 # services:
