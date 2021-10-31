@@ -35,7 +35,7 @@ jobs:
             targetType: 'inline'
             script: |
               ls
-              docker pull ghcr.io/linuxserver/sonarr
+              docker-compose pull
               PASSWORD=$(PASSWORD) docker-compose config
-              PASSWORD=$(PASSWORD) docker-compose up -d
+              PASSWORD=$(PASSWORD) docker-compose restart
               echo 'Hello world'
