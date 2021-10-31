@@ -3,11 +3,14 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-resources:
-  containers:
-  - container: sonar
-    endpoint: dockerHub
-    image: ghcr.io/linuxserver/sonarr
+variables:
+ - group: secrets
+
+# resources:
+#   containers:
+#   - container: sonar
+#     endpoint: dockerHub
+#     image: ghcr.io/linuxserver/sonarr
 
 trigger:
 - '*'
@@ -33,5 +36,6 @@ jobs:
             script: |
               ls
               docker pull ghcr.io/linuxserver/sonarr
-              docker-compose up -d
+              PASSWORD=$(PASSWORD) docker-compose config
+              PASSWORD=$(PASSWORD) docker-compose up -d
               echo 'Hello world'

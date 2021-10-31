@@ -64,28 +64,7 @@ services:
       - /media/data/jackett/downloads:/downloads
     ports:
       - 9117:9117
-    restart: unless-stopped 
-  # pihole:
-  #   container_name: pihole
-  #   image: pihole/pihole:latest
-  #   ports:
-  #     - "53:53/tcp"
-  #     - "53:53/udp"
-  #     - "67:67/udp"
-  #     - "80:80/tcp"
-  #     - "443:443/tcp"
-  #   environment:
-  #     TZ: 'Europe/Riga'
-  #     # WEBPASSWORD: 'set a secure password here or it will be random'
-  #   # Volumes store your data between container upgrades
-  #   volumes:
-  #     - './etc-pihole/:/etc/pihole/'
-  #     - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
-  #   # Recommended but not required (DHCP needs NET_ADMIN)
-  #   #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
-  #   cap_add:
-  #     - NET_ADMIN
-  #   restart: unless-stopped
+    restart: unless-stopped
   plex:
     container_name: plex
     image: plexinc/pms-docker:latest
@@ -100,20 +79,43 @@ services:
       - /media/data/transcode/temp:/transcode
       - /media/data/downloads/movies:/movies
       - /media/data/sonarr/tvseries:/tvshows
-  minidlna:
-    container_name: minidnla
-    image: binhex/arch-minidlna:latest
-    restart: unless-stopped
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Riga
-      - SCAN_ON_BOOT=yes
-    network_mode: host
-    hostname: minidnla
+      TZ: 'America/Chicago'
+      WEBPASSWORD: '${PASSWORD}'
+    # Volumes store your data between container upgrades
     volumes:
-      - /media/data/downloads:/media
-      - /etc/localtime:/etc/localtime:ro
+      - './etc-pihole/:/etc/pihole/'
+      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+
+  # minidlna:
+  #   container_name: minidnla
+  #   image: binhex/arch-minidlna:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Europe/Riga
+  #     - SCAN_ON_BOOT=yes
+  #   network_mode: host
+  #   hostname: minidnla
+  #   volumes:
+  #     - /media/data/downloads:/media
+  #     - /etc/localtime:/etc/localtime:ro
 
 # version: "3.9"  # optional since v1.27.0
 # services:
@@ -138,3 +140,24 @@ services:
 #     cap_add:
 #       - NET_ADMIN
 #     restart: unless-stopped
+  # pihole:
+  #   container_name: pihole
+  #   image: pihole/pihole:latest
+  #   ports:
+  #     - "53:53/tcp"
+  #     - "53:53/udp"
+  #     - "67:67/udp"
+  #     - "80:80/tcp"
+  #     - "443:443/tcp"
+  #   environment:
+  #     TZ: 'Europe/Riga'
+  #     # WEBPASSWORD: 'set a secure password here or it will be random'
+  #   # Volumes store your data between container upgrades
+  #   volumes:
+  #     - './etc-pihole/:/etc/pihole/'
+  #     - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+  #   # Recommended but not required (DHCP needs NET_ADMIN)
+  #   #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+  #   cap_add:
+  #     - NET_ADMIN
+  #   restart: unless-stopped
