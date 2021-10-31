@@ -100,18 +100,14 @@ services:
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
-
-  # minidlna:
-  #   container_name: minidnla
-  #   image: binhex/arch-minidlna:latest
-  #   restart: unless-stopped
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Europe/Riga
-  #     - SCAN_ON_BOOT=yes
-  #   network_mode: host
-  #   hostname: minidnla
-  #   volumes:
-  #     - /media/data/downloads:/media
-  #     - /etc/localtime:/etc/localtime:ro
+  portainer:
+    image: portainer/portainer-ce:linux-arm
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /media/data/portainer:/data
+    ports:
+      - 8000:8000
+      - 9443:9443

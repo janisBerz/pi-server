@@ -13,7 +13,8 @@ variables:
 #     image: ghcr.io/linuxserver/sonarr
 
 trigger:
-- '*'
+- main
+- master
 
 pool:
   vmImage: ubuntu-latest
